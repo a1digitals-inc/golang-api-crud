@@ -1,0 +1,12 @@
+basePath: /
+host: localhost
+info:
+  contact:
+    name: API Support
+  description: This is a sample posts API.
+  license:
+    name: MIT
+  title: Posts API
+  version: "1.0"
+paths: {}
+swagger: "2.0"

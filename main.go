@@ -1,10 +1,10 @@
 package main
 
 import (
-  "fmt"
   "log"
   "github.com/gin-gonic/gin"
-  _ "github.com/gin-gonic/gin/binding"
+  // ginSwagger"github.com/swaggo/gin-swagger"
+  // swaggerFiles "github.com/swaggo/files"
 )
 
 type Post struct {
@@ -95,8 +95,6 @@ func update (c *gin.Context) {
 // @host localhost
 // @BasePath /
 func main () {
-  fmt.Println("Running server...")
-
   router := gin.Default()
 
 	router.GET("/", index)
