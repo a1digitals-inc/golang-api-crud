@@ -5,3 +5,6 @@ run:
 
 docs: 
 	~/$HOME/go/bin/swag init
+
+clean:
+	go mod tidy
