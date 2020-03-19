@@ -13,5 +13,47 @@
     },
     "host": "localhost",
     "basePath": "/",
-    "paths": {}
+    "paths": {
+        "/": {
+            "get": {
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get all posts"
+            },
+            "post": {
+                "description": "Save a new post",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Save post"
+            }
+        },
+        "/{id}": {
+            "get": {
+                "description": "Get a post with given ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get post"
+            },
+            "put": {
+                "description": "Update a post with given ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update post"
+            },
+            "delete": {
+                "description": "Delete a post with given ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete post"
+            }
+        }
+    }
 }

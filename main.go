@@ -27,10 +27,18 @@ var posts = []Post {
   },
 }
 
+// @Summary Get all posts
+// @Accept multipart/form-data
+// @Produce json
+// @Router / [get]
 func index (c *gin.Context) {
 	c.JSON(200, posts)
 }
 
+// @Summary Save post
+// @Description Save a new post
+// @Produce json
+// @Router / [post]
 func save (c *gin.Context) {
   var post Post
   c.BindJSON(&post)
@@ -40,6 +48,10 @@ func save (c *gin.Context) {
   })
 }
 
+// @Summary Get post
+// @Description Get a post with given ID
+// @Produce json
+// @Router /{id} [get]
 func get (c *gin.Context) {
   postId := c.Param("id")
   for _, post := range posts {
@@ -53,6 +65,10 @@ func get (c *gin.Context) {
   })
 }
 
+// @Summary Delete post
+// @Description Delete a post with given ID
+// @Produce json
+// @Router /{id} [delete]
 func delete (c *gin.Context) {
   postId := c.Param("id")
   for i, post := range posts {
@@ -69,6 +85,10 @@ func delete (c *gin.Context) {
   })
 }
 
+// @Summary Update post
+// @Description Update a post with given ID
+// @Produce json
+// @Router /{id} [put]
 func update (c *gin.Context) {
   postId := c.Param("id")
   var updatedPost Post
@@ -96,12 +116,10 @@ func update (c *gin.Context) {
 // @BasePath /
 func main () {
   router := gin.Default()
-
-	router.GET("/", index)
-	router.POST("/", save)
+  router.GET("/", index)
+  router.POST("/", save)
   router.GET("/:id", get)
   router.DELETE("/:id", delete)
   router.PUT("/:id", update)
-  
-	log.Fatal(router.Run(":6969"))
+  log.Fatal(router.Run(":6969"))
 }
