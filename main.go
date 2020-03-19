@@ -2,11 +2,9 @@ package main
 
 import (
   "fmt"
-  "net/http"
   "log"
-  "encoding/json"
-  "io/ioutil"
-  "github.com/gorilla/mux"
+  "github.com/gin-gonic/gin"
+  _ "github.com/gin-gonic/gin/binding"
 )
 
 type Post struct {
@@ -29,77 +27,83 @@ var posts = []Post {
   },
 }
 
-func index (w http.ResponseWriter, r *http.Request) {
-  json.NewEncoder(w).Encode(posts)
+func index (c *gin.Context) {
+	c.JSON(200, posts)
 }
 
-func save (w http.ResponseWriter, r *http.Request) {
+func save (c *gin.Context) {
   var post Post
-  reqBody, err := ioutil.ReadAll(r.Body)
-  if err != nil {
-    var error = Response {
-      Message: "Input error",
-    }
-    json.NewEncoder(w).Encode(error)
-  }
-  json.Unmarshal(reqBody, &post)
+  c.BindJSON(&post)
   posts = append(posts, post)
-  json.NewEncoder(w).Encode(Response {
+  c.JSON(200, Response {
     Message: "Success",
   })
 }
 
-func get (w http.ResponseWriter, r *http.Request) {
-  postId := mux.Vars(r)["id"]
-
+func get (c *gin.Context) {
+  postId := c.Param("id")
   for _, post := range posts {
     if post.Id == postId {
-      json.NewEncoder(w).Encode(post)
+      c.JSON(200, post)
       return
     }
   }
-  var error = Response {
+  c.JSON(404, Response {
     Message: "Post not found",
-  }
-  json.NewEncoder(w).Encode(error)
+  })
 }
 
-func delete (w http.ResponseWriter, r *http.Request) {
-  postId := mux.Vars(r)["id"]
-
+func delete (c *gin.Context) {
+  postId := c.Param("id")
   for i, post := range posts {
     if post.Id == postId {
       posts = append(posts[:i], posts[i+1:]...)
-      var res = Response {
+      c.JSON(200, Response {
         Message: "The post with ID " + postId + " has been deleted successfully",
-      }
-      json.NewEncoder(w).Encode(res)
+      })
       return
     }
   }
-  var error = Response {
+  c.JSON(404, Response {
     Message: "Post not found",
-  }
-  json.NewEncoder(w).Encode(error)
+  })
 }
 
-func update (w http.ResponseWriter, r *http.Request) {
-  var msg = Response {
-    Message: "Not implemented yet",
+func update (c *gin.Context) {
+  postId := c.Param("id")
+  var updatedPost Post
+  c.BindJSON(&updatedPost)
+  for i, post := range posts {
+    if post.Id == postId {
+      posts[i].Title = updatedPost.Title
+      c.JSON(200, Response {
+        Message: "The post with ID " + postId + " has been updated successfully",
+      })
+      return
+    }
   }
-  json.NewEncoder(w).Encode(msg)
+  c.JSON(404, Response {
+    Message: "Post not found",
+  })
 }
 
+// @title Posts API
+// @version 1.0
+// @description This is a sample posts API.
+// @contact.name API Support
+// @license.name MIT
+// @host localhost
+// @BasePath /
 func main () {
-  fmt.Println("Running server")
+  fmt.Println("Running server...")
 
-  router := mux.NewRouter()
+  router := gin.Default()
 
-  router.HandleFunc("/", index).Methods("GET")
-  router.HandleFunc("/", save).Methods("POST")
-  router.HandleFunc("/{id}", get).Methods("GET")
-  router.HandleFunc("/{id}", delete).Methods("DELETE")
-  router.HandleFunc("/{id}", update).Methods("PUT")
-
-  log.Fatal(http.ListenAndServe(":6969", router))
+	router.GET("/", index)
+	router.POST("/", save)
+  router.GET("/:id", get)
+  router.DELETE("/:id", delete)
+  router.PUT("/:id", update)
+  
+	log.Fatal(router.Run(":6969"))
 }
