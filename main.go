@@ -5,6 +5,7 @@ import (
   "net/http"
   "log"
   "encoding/json"
+  "io/ioutil"
   "github.com/gorilla/mux"
 )
 
@@ -33,10 +34,19 @@ func index (w http.ResponseWriter, r *http.Request) {
 }
 
 func save (w http.ResponseWriter, r *http.Request) {
-  var msg = Response {
-    Message: "Not implemented yet",
+  var post Post
+  reqBody, err := ioutil.ReadAll(r.Body)
+  if err != nil {
+    var error = Response {
+      Message: "Input error",
+    }
+    json.NewEncoder(w).Encode(error)
   }
-  json.NewEncoder(w).Encode(msg)
+  json.Unmarshal(reqBody, &post)
+  posts = append(posts, post)
+  json.NewEncoder(w).Encode(Response {
+    Message: "Success",
+  })
 }
 
 func get (w http.ResponseWriter, r *http.Request) {
