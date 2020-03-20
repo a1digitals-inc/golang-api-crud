@@ -1,9 +1,11 @@
 package main
 
 import (
-  "log"
-  "github.com/gin-gonic/gin"
-  "github.com/asif-ir/golang-api-crud/routes"
+	"log"
+
+	"github.com/gin-gonic/gin"
+
+	generalRouter "github.com/asif-ir/golang-api-crud/routes/general"
 )
 
 // @title Posts API
@@ -13,12 +15,12 @@ import (
 // @license.name MIT
 // @host localhost
 // @BasePath /
-func main () {
-  router := gin.Default()
-  router.GET("/", routes.Index)
-  router.POST("/", routes.Save)
-  router.GET("/:id", routes.Get)
-  router.DELETE("/:id", routes.Delete)
-  router.PUT("/:id", routes.Update)
-  log.Fatal(router.Run(":6969"))
+func main() {
+	router := gin.Default()
+	router.GET("/", generalRouter.Index)
+	router.POST("/", generalRouter.Save)
+	router.GET("/:id", generalRouter.Get)
+	router.DELETE("/:id", generalRouter.Delete)
+	router.PUT("/:id", generalRouter.Update)
+	log.Fatal(router.Run(":6969"))
 }
