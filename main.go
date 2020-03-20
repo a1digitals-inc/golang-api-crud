@@ -1,11 +1,12 @@
 package main
 
 import (
-	"log"
+  "log"
 
-	"github.com/gin-gonic/gin"
+  "github.com/gin-gonic/gin"
 
-	generalRouter "github.com/asif-ir/golang-api-crud/routes/general"
+  authRouter "github.com/asif-ir/golang-api-crud/routes/auth"
+  generalRouter "github.com/asif-ir/golang-api-crud/routes/general"
 )
 
 // @title Posts API
@@ -16,11 +17,16 @@ import (
 // @host localhost
 // @BasePath /
 func main() {
-	router := gin.Default()
-	router.GET("/", generalRouter.Index)
-	router.POST("/", generalRouter.Save)
-	router.GET("/:id", generalRouter.Get)
-	router.DELETE("/:id", generalRouter.Delete)
-	router.PUT("/:id", generalRouter.Update)
-	log.Fatal(router.Run(":6969"))
+  router := gin.Default()
+  router.GET("/", generalRouter.Index)
+  router.POST("/", generalRouter.Save)
+  router.GET("/:id", generalRouter.Get)
+  router.DELETE("/:id", generalRouter.Delete)
+  router.PUT("/:id", generalRouter.Update)
+
+  router.POST("/auth/login", authRouter.Login)
+  router.POST("/auth/authenticate", authRouter.Authenticate)
+  router.POST("/auth/register", authRouter.Register)
+
+  log.Fatal(router.Run(":6969"))
 }

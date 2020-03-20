@@ -7,6 +7,7 @@ import (
 )
 
 // Response ...
+// TODO: Move into separate schemas directory
 type Response struct {
 	Message string `json:"message"`
 }
