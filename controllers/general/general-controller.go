@@ -1,62 +1,30 @@
 package generalcontroller
 
 import (
-  "errors"
-  "fmt"
+  postModel "github.com/asif-ir/golang-api-crud/models/post"
 )
 
-// Post ...
-type Post struct {
-  Id    string `json:"id"`
-  Title string `json:"title"`
-}
-
-// Posts ...
-var Posts = []Post{
-  {
-    Id:    "1",
-    Title: "Post 1",
-  },
-  {
-    Id:    "2",
-    Title: "Post 2",
-  },
-}
-
 // AddPost ...
-func AddPost(post Post) {
-  Posts = append(Posts, post)
+func AddPost(post postModel.Post) error {
+  return post.Save()
+}
+
+// GetAllPosts ...
+func GetAllPosts() ([]postModel.Post, error) {
+  return postModel.Find()
 }
 
 // GetPost ...
-func GetPost(postID string) (Post, error) {
-  fmt.Println("Given postID ", postID)
-  for _, post := range Posts {
-    if post.Id == postID {
-      return post, nil
-    }
-  }
-  return Post{}, errors.New("Post not found")
+func GetPost(postID string) (postModel.Post, error) {
+  return postModel.FindOne(postID)
 }
 
 // DeletePost ...
 func DeletePost(postID string) error {
-  for i, post := range Posts {
-    if post.Id == postID {
-      Posts = append(Posts[:i], Posts[i+1:]...)
-      return nil
-    }
-  }
-  return errors.New("Post not found")
+  return postModel.Delete(postID)
 }
 
 // UpdatePost ...
-func UpdatePost(postID string, updatedPost Post) error {
-  for i, post := range Posts {
-    if post.Id == postID {
-      Posts[i].Title = updatedPost.Title
-      return nil
-    }
-  }
-  return errors.New("Post not found")
+func UpdatePost(postID string, updatedPost postModel.Post) error {
+  return postModel.Update(postID, updatedPost)
 }

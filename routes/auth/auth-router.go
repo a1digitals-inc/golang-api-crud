@@ -23,6 +23,9 @@ type Credentials struct {
 }
 
 // Login ...
+// @Summary Login user
+// @Produce json
+// @Router /auth/login [post]
 func Login(c *gin.Context) {
   var creds Credentials
   c.BindJSON(&creds)
@@ -39,6 +42,9 @@ func Login(c *gin.Context) {
 }
 
 // Authenticate ...
+// @Summary Authenticate user token
+// @Produce json
+// @Router /auth/authenticate [post]
 func Authenticate(c *gin.Context) {
   authorization := c.Request.Header.Get("Authorization")
   if strings.HasPrefix(authorization, "Bearer ") {
@@ -57,6 +63,9 @@ func Authenticate(c *gin.Context) {
 }
 
 // Register ...
+// @Summary Register user
+// @Produce json
+// @Router /auth/register [post]
 func Register(c *gin.Context) {
   var creds Credentials
   c.BindJSON(&creds)

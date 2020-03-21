@@ -4,6 +4,7 @@ import (
   "github.com/gin-gonic/gin"
 
   generalController "github.com/asif-ir/golang-api-crud/controllers/general"
+  postModel "github.com/asif-ir/golang-api-crud/models/post"
 )
 
 // Response ...
@@ -14,11 +15,11 @@ type Response struct {
 
 // Index ...
 // @Summary Get all posts
-// @Accept multipart/form-data
 // @Produce json
 // @Router / [get]
 func Index(c *gin.Context) {
-  c.JSON(200, generalController.Posts)
+  posts, _ := generalController.GetAllPosts()
+  c.JSON(200, posts)
 }
 
 // Save ...
@@ -27,7 +28,7 @@ func Index(c *gin.Context) {
 // @Produce json
 // @Router / [post]
 func Save(c *gin.Context) {
-  var post generalController.Post
+  var post postModel.Post
   c.BindJSON(&post)
   generalController.AddPost(post)
   c.JSON(200, Response{
@@ -78,7 +79,7 @@ func Delete(c *gin.Context) {
 // @Router /{id} [put]
 func Update(c *gin.Context) {
   postID := c.Param("id")
-  var updatedPost generalController.Post
+  var updatedPost postModel.Post
   c.BindJSON(&updatedPost)
   err := generalController.UpdatePost(postID, updatedPost)
   if err != nil {
