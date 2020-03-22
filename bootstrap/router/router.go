@@ -5,6 +5,9 @@ import (
 
   "github.com/gin-gonic/gin"
 
+  authMiddleware "github.com/asif-ir/golang-api-crud/middleware/auth"
+  corsMiddleware "github.com/asif-ir/golang-api-crud/middleware/cors"
+  xssMiddleware "github.com/asif-ir/golang-api-crud/middleware/xss"
   authRouter "github.com/asif-ir/golang-api-crud/routes/auth"
   generalRouter "github.com/asif-ir/golang-api-crud/routes/general"
 )
@@ -19,12 +22,15 @@ import (
 // @BasePath /
 func InitRouter() {
   router := gin.Default()
+  router.Use(corsMiddleware.CORS())
+  router.Use(xssMiddleware.XSS())
   router.GET("/", func(c *gin.Context) {
     c.JSON(200, gin.H{
       "status": "UP",
     })
   })
   postsRouterGroup := router.Group("/posts")
+  postsRouterGroup.Use(authMiddleware.Authenticated())
   {
     postsRouterGroup.GET("/", generalRouter.Index)
     postsRouterGroup.POST("/", generalRouter.Save)
